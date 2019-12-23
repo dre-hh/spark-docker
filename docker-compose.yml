@@ -1,7 +1,7 @@
 version: "3"
 services:
   spark-master:
-    image: gettyimages/spark
+    image: dre_hh/spark
     command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
     hostname: spark-master
     environment:
@@ -25,13 +25,13 @@ services:
       - .:/playground
 
   spark-worker:
-    image: gettyimages/spark
+    image: dre_hh/spark
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     hostname: spark-worker
     environment:
       SPARK_CONF_DIR: /playground/conf/spark_worker
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 1g
+      SPARK_WORKER_CORES: 6
+      SPARK_WORKER_MEMORY: 30g
       SPARK_WORKER_PORT: 8881
       SPARK_WORKER_WEBUI_PORT: 8081
       SPARK_PUBLIC_DNS: localhost
@@ -45,12 +45,15 @@ services:
       - 8081:8081
     volumes:
       - .:/playground
+
   spark-submit:
     build: .
     image: spark-playground
-    # command: echo dot
-    command: jupyter notebook --port=9000 --no-browser --ip=0.0.0.0 --allow-root
+    command: pyspark
     environment:
+      PYSPARK_DRIVER_PYTHON: jupyter
+      PYSPARK_DRIVER_PYTHON_OPTS: notebook --port=9000 --no-browser --ip=0.0.0.0 --allow-root
+      PYSPARK_PYTHON: python3
       SPARK_CONF_DIR: /playground/conf/spark_submit
       SPARK_PUBLIC_DNS: localhost
     ports:
