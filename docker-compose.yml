@@ -46,11 +46,11 @@ services:
     volumes:
       - .:/playground
 
-    spark-submit:
+  spark-submit:
     build: .
     image: spark-playground
     # command: echo dot
-    # command: jupyter notebook --port=9000 --no-browser --ip=0.0.0.0 --allow-root
+    command: jupyter notebook --port=9000 --no-browser --ip=0.0.0.0 --allow-root
     environment:
       SPARK_CONF_DIR: /playground/conf/spark_submit
       SPARK_PUBLIC_DNS: localhost
