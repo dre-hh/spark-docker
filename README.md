@@ -1,4 +1,4 @@
-# Spark Playground
+# Spark Docker
 
 ```
 docker build  -t dre_hh/spark  -f Dockerfile.spark .
