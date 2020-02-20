@@ -1,8 +1,7 @@
 FROM dre_hh/spark
-WORKDIR /playground
-COPY conf/jupyter /root/.jupyter
+WORKDIR /app
 
-COPY bin /playground/bin
-COPY requirements.txt /playground
+COPY bin /app/bin
+COPY requirements.txt /app
 RUN python3 -m pip install jupyter
 

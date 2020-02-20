@@ -6,7 +6,7 @@ services:
     hostname: spark-master
     environment:
       MASTER: spark://spark-master:7077
-      SPARK_CONF_DIR: /playground/conf/spark_master
+      SPARK_CONF_DIR: /app/conf/spark_master
       SPARK_PUBLIC_DNS: localhost
     expose:
       - 7001
@@ -22,14 +22,14 @@ services:
       - 7077:7077
       - 8080:8080
     volumes:
-      - .:/playground
+      - .:/app
 
   spark-worker:
     image: dre_hh/spark
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     hostname: spark-worker
     environment:
-      SPARK_CONF_DIR: /playground/conf/spark_worker
+      SPARK_CONF_DIR: /app/conf/spark_worker
       SPARK_WORKER_CORES: 6
       SPARK_WORKER_MEMORY: 30g
       SPARK_WORKER_PORT: 8881
@@ -44,22 +44,22 @@ services:
     ports:
       - 8081:8081
     volumes:
-      - .:/playground
+      - .:/app
 
-  spark-submit:
+  spark-notebook:
     build: .
-    image: spark-playground
-    command: pyspark
+    image: spark-notebook
+    command: pyspark --master  spark://spark-master:7077
     environment:
       PYSPARK_DRIVER_PYTHON: jupyter
       PYSPARK_DRIVER_PYTHON_OPTS: notebook --port=9000 --no-browser --ip=0.0.0.0 --allow-root
       PYSPARK_PYTHON: python3
-      SPARK_CONF_DIR: /playground/conf/spark_submit
+      SPARK_CONF_DIR: /app/conf/spark_notebook
       SPARK_PUBLIC_DNS: localhost
     ports:
       - 9000:9000
     volumes:
-      - .:/playground
-    working_dir: /playground
+      - .:/app
+    working_dir: /app
 
 
